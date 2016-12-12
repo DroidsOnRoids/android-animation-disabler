@@ -1,0 +1,32 @@
+plugins {
+	id 'com.gradle.plugin-publish' version '0.9.6'
+	id 'nebula.kotlin' version '1.0.5-2'
+}
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	compile 'com.android.tools.build:gradle:2.2.3'
+	compileOnly gradleApi()
+}
+
+group = GROUP
+version = VERSION_NAME
+
+pluginBundle {
+	website = POM_URL
+	vcsUrl = POM_SCM_URL
+	description = POM_DESCRIPTION
+	tags = ['android', 'ci', 'espresso', 'test', 'UI', 'animation']
+
+	plugins {
+		disabler {
+			id = 'pl.droidsonroids.animation-disabler'
+			displayName = POM_NAME
+			description = POM_DESCRIPTION
+		}
+	}
+}

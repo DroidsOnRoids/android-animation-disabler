@@ -16,13 +16,21 @@ class AnimationDisablerPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		project.pluginManager.apply(BasePlugin::class.java)
 
-		val disableAnimations = project.createAnimationScaleTask(false)
-		val enableAnimations = project.createAnimationScaleTask(true)
-		project.afterEvaluate {
-			project.tasks.withType(DeviceProviderInstrumentTestTask::class.java).forEach {
-				it.dependsOn(disableAnimations)
-				it.finalizedBy(enableAnimations)
+		val androidPlugins = listOf("com.android.application", "com.android.library", "com.android.test")
+		androidPlugins.forEach {
+			project.plugins.withId(it) {
+				project.addAnimationTasksWithDependencies()
 			}
+		}
+	}
+
+	fun Project.addAnimationTasksWithDependencies() = afterEvaluate {
+		val disableAnimations = createAnimationScaleTask(false)
+		val enableAnimations = createAnimationScaleTask(true)
+
+		tasks.withType(DeviceProviderInstrumentTestTask::class.java).forEach {
+			it.dependsOn(disableAnimations)
+			it.finalizedBy(enableAnimations)
 		}
 	}
 

@@ -35,7 +35,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
 	}
 
 	fun Project.createAnimationScaleTask(enableAnimations: Boolean): Task =
-			tasks.create("connected${if (enableAnimations) "Dis" else "En"}ableAnimations") {
+			tasks.create("connected${if (enableAnimations) "En" else "Dis"}ableAnimations") {
 				val scale = if (enableAnimations) 1 else 0
 
 				AndroidDebugBridge.initIfNeeded(false)

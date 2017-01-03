@@ -1,6 +1,6 @@
 plugins {
 	id 'com.gradle.plugin-publish' version '0.9.6'
-	id 'nebula.kotlin' version '1.0.5-2'
+	id 'nebula.kotlin' version '1.0.6'
 }
 
 repositories {

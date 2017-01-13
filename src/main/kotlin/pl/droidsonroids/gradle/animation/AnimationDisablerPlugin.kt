@@ -49,9 +49,19 @@ class AnimationDisablerPlugin : Plugin<Project> {
 				}
 			}
 
+	val androidSerial = System.getenv("ANDROID_SERIAL")?.split(',')
+
 	fun AndroidDebugBridge.setAnimationScale(value: Int) {
 		val settingsPrefixes = listOf("window_animation", "transition_animation", "animator_duration")
-		devices.forEach { device ->
+		var devicesToSet = devices
+
+		if (androidSerial != null) {
+			devicesToSet = devices.filter {
+				it.serialNumber in androidSerial
+			}.toTypedArray()
+		}
+
+		devicesToSet.forEach { device ->
 			settingsPrefixes.forEach { prefix ->
 				device.setScaleSetting("${prefix}_scale", value)
 			}

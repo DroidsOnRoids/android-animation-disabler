@@ -3,8 +3,8 @@ package pl.droidsonroids.gradle.animation
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.tasks.DeviceProviderInstrumentTestTask
 import com.android.ddmlib.AndroidDebugBridge
+import com.android.ddmlib.DdmPreferences
 import com.android.ddmlib.IDevice
-import com.android.ddmlib.NullOutputReceiver
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -12,6 +12,8 @@ import org.gradle.api.plugins.BasePlugin
 import java.util.concurrent.TimeUnit
 
 class AnimationDisablerPlugin : Plugin<Project> {
+
+	val androidSerials = System.getenv("ANDROID_SERIAL")?.split(',')
 
 	override fun apply(project: Project) {
 		project.pluginManager.apply(BasePlugin::class.java)
@@ -41,34 +43,34 @@ class AnimationDisablerPlugin : Plugin<Project> {
 				AndroidDebugBridge.initIfNeeded(false)
 				val android = project.extensions.getByType(BaseExtension::class.java)
 				val bridge = AndroidDebugBridge.createBridge(android.adbExecutable.path, false)
+				val shellOuptutReceiver = ADBShellOutputReceiver(it.logger)
 
 				it.group = "verification"
 				it.description = "Sets animation scale to $scale on all connected Android devices and AVDs"
 				it.doLast {
-					bridge.setAnimationScale(scale)
+					bridge.setAnimationScale(scale, shellOuptutReceiver)
 				}
 			}
 
-	val androidSerial = System.getenv("ANDROID_SERIAL")?.split(',')
-
-	fun AndroidDebugBridge.setAnimationScale(value: Int) {
+	fun AndroidDebugBridge.setAnimationScale(value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
 		val settingsPrefixes = listOf("window_animation", "transition_animation", "animator_duration")
 		var devicesToSet = devices
 
-		if (androidSerial != null) {
+		if (androidSerials != null) {
 			devicesToSet = devices.filter {
-				it.serialNumber in androidSerial
+				it.serialNumber in androidSerials
 			}.toTypedArray()
 		}
 
 		devicesToSet.forEach { device ->
 			settingsPrefixes.forEach { prefix ->
-				device.setScaleSetting("${prefix}_scale", value)
+				device.setScaleSetting("${prefix}_scale", value, shellOuptutReceiver)
 			}
 		}
 	}
 
-	fun IDevice.setScaleSetting(key: String, value: Int) {
-		executeShellCommand("settings put global $key $value", NullOutputReceiver.getReceiver(), 1, TimeUnit.SECONDS)
+	fun IDevice.setScaleSetting(key: String, value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
+		executeShellCommand("settings put global $key $value", shellOuptutReceiver, DdmPreferences.getTimeOut().toLong(), TimeUnit.MILLISECONDS)
 	}
+
 }

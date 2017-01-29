@@ -3,6 +3,22 @@ sudo: false
 jdk:
   - oraclejdk8
 
+language:
+  - android
+
+licenses:
+  - 'android-sdk-preview-license-52d11cd2'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+
+android:
+  components:
+    - tools # to get the new `repository-11.xml`
+    - tools # see https://github.com/travis-ci/travis-ci/issues/6040#issuecomment-219367943)
+    - platform-tools
+    - build-tools-25.0.2
+    - android-25
+
 script:
   - ./gradlew build --info --stacktrace
 

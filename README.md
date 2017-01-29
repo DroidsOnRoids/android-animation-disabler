@@ -5,7 +5,7 @@ Gradle plugin for disabling animations in global settings before UI tests and re
 Add plugin to Android module `build.gradle` (**not** top-level one):
  ```
  plugins {
-   id "pl.droidsonroids.animation-disabler" version "1.0.3"
+   id "pl.droidsonroids.animation-disabler" version "1.0.4"
  }
  ```
 See also [Gradle plugin portal](https://plugins.gradle.org/plugin/pl.droidsonroids.animation-disabler) and [sample project](sample).

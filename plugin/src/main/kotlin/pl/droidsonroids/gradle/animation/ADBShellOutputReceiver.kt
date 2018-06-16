@@ -3,7 +3,7 @@ package pl.droidsonroids.gradle.animation
 import com.android.ddmlib.MultiLineReceiver
 import org.gradle.api.logging.Logger
 
-class ADBShellOutputReceiver(val logger: Logger) : MultiLineReceiver() {
+class ADBShellOutputReceiver(private val logger: Logger) : MultiLineReceiver() {
 	override fun isCancelled() = false
 
 	override fun processNewLines(lines: Array<out String>) {

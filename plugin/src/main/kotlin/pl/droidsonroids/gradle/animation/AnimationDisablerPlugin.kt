@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 class AnimationDisablerPlugin : Plugin<Project> {
 
-	val androidSerials = System.getenv("ANDROID_SERIAL")?.split(',')
+    private val androidSerials = System.getenv("ANDROID_SERIAL")?.split(',')
 
 	override fun apply(project: Project) {
 		project.pluginManager.apply(BasePlugin::class.java)
@@ -26,7 +26,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
 		}
 	}
 
-	fun Project.addAnimationTasksWithDependencies() = afterEvaluate {
+    private fun Project.addAnimationTasksWithDependencies() = afterEvaluate {
 		val disableAnimations = createAnimationScaleTask(false)
 		val enableAnimations = createAnimationScaleTask(true)
 
@@ -36,7 +36,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
 		}
 	}
 
-	fun Project.createAnimationScaleTask(enableAnimations: Boolean): Task =
+    private fun Project.createAnimationScaleTask(enableAnimations: Boolean): Task =
 			tasks.create("connected${if (enableAnimations) "En" else "Dis"}ableAnimations") {
 				val scale = if (enableAnimations) 1 else 0
 
@@ -52,7 +52,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
 				}
 			}
 
-	fun AndroidDebugBridge.setAnimationScale(value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
+    private fun AndroidDebugBridge.setAnimationScale(value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
 		val settingsPrefixes = listOf("window_animation", "transition_animation", "animator_duration")
 		var devicesToSet = devices
 
@@ -69,8 +69,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
 		}
 	}
 
-	fun IDevice.setScaleSetting(key: String, value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
+    private fun IDevice.setScaleSetting(key: String, value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
 		executeShellCommand("settings put global $key $value", shellOuptutReceiver, DdmPreferences.getTimeOut().toLong(), TimeUnit.MILLISECONDS)
 	}
-
 }

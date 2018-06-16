@@ -1,3 +1,7 @@
+### 1.0.5
+ - Dependencies versions updated
+ - Increase errors logging verbosity
+
 ### 1.0.4
  - Hardcoded 1s ADB shell timeout replaced with value from `DdmPreferences`
  - Debug logging added

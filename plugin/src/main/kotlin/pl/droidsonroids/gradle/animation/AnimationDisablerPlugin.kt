@@ -9,6 +9,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.BasePlugin
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 class AnimationDisablerPlugin : Plugin<Project> {
@@ -48,11 +49,11 @@ class AnimationDisablerPlugin : Plugin<Project> {
             it.group = "verification"
             it.description = "Sets animation scale to $scale on all connected Android devices and AVDs"
             it.doLast {
-                bridge.setAnimationScale(scale, shellOuptutReceiver, project)
+                bridge.setAnimationScale(scale, shellOuptutReceiver)
             }
         }
 
-    private fun AndroidDebugBridge.setAnimationScale(value: Int, shellOuptutReceiver: ADBShellOutputReceiver, project: Project) {
+    private fun AndroidDebugBridge.setAnimationScale(value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
         val settingsPrefixes = listOf("window_animation", "transition_animation", "animator_duration")
         var devicesToSet = devices
 
@@ -64,8 +65,11 @@ class AnimationDisablerPlugin : Plugin<Project> {
 
         devicesToSet.forEach { device ->
             settingsPrefixes.forEach { prefix ->
-                project.logger.info("Setting ${prefix}_scale to $value on ${device.serialNumber}")
-                device.setScaleSetting("${prefix}_scale", value, shellOuptutReceiver)
+                try {
+                    device.setScaleSetting("${prefix}_scale", value, shellOuptutReceiver)
+                } catch (e: Exception) {
+                    throw IOException("Setting ${prefix}_scale to $value on ${device.serialNumber}", e)
+                }
             }
         }
     }

@@ -1,35 +1,34 @@
 buildscript {
-	repositories {
-		google()
-		jcenter()
-	}
-	dependencies {
-		classpath "com.android.tools.build:gradle:3.1.3"
-	}
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+        classpath "com.android.tools.build:gradle:$versions.androidGradlePlugin"
+    }
 }
 
 plugins {
-	id "pl.droidsonroids.animation-disabler" version "1.0.5"
+    id "pl.droidsonroids.animation-disabler" version "1.0.5"
 }
 
 apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
 apply plugin: "pl.droidsonroids.animation-disabler"
 
 android {
-	compileSdkVersion 27
-	defaultConfig {
-		minSdkVersion 25
-		targetSdkVersion 27
-		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-	}
+    compileSdkVersion versions.compileSdk
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
 }
 
 dependencies {
-	androidTestImplementation 'com.android.support.test:runner:1.0.2'
-	androidTestImplementation 'com.android.support.test:rules:1.0.2'
-}
-
-repositories {
-	google()
-	jcenter()
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    androidTestImplementation "androidx.test:rules:$versions.androidXtest"
+    androidTestImplementation "androidx.test:runner:$versions.androidXtest"
+    androidTestImplementation "androidx.test.ext:junit:$versions.androidXextJunit"
+    androidTestImplementation "junit:junit:+"
 }

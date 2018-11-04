@@ -1,42 +1,44 @@
-plugins {
-	id "com.gradle.plugin-publish" version "0.9.10"
-	id "org.jetbrains.kotlin.jvm" version "1.2.50"
-	id "java-gradle-plugin"
+buildscript {
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+    }
 }
 
-repositories {
-	google()
-	mavenCentral()
-	jcenter()
+plugins {
+    id "com.gradle.plugin-publish" version "0.10.0"
+    id "java-gradle-plugin"
 }
+
+apply plugin: "kotlin"
 
 dependencies {
-	implementation 'com.android.tools.build:gradle:3.1.3'
+    implementation "com.android.tools.build:gradle:$versions.androidGradlePlugin"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
 }
 
 gradlePlugin {
-	plugins {
-		simplePlugin {
-			id = 'pl.droidsonroids.animation-disabler'
-			implementationClass = 'pl.droidsonroids.gradle.animation.AnimationDisablerPlugin'
-		}
-	}
+    plugins {
+        simplePlugin {
+            id = 'pl.droidsonroids.animation-disabler'
+            implementationClass = 'pl.droidsonroids.gradle.animation.AnimationDisablerPlugin'
+        }
+    }
 }
 
 group = GROUP
 version = VERSION_NAME
 
 pluginBundle {
-	website = POM_URL
-	vcsUrl = POM_SCM_URL
-	description = POM_DESCRIPTION
-	tags = ['android', 'ci', 'espresso', 'test', 'UI', 'animation']
+    website = POM_URL
+    vcsUrl = POM_SCM_URL
+    description = POM_DESCRIPTION
+    tags = ['android', 'ci', 'espresso', 'test', 'UI', 'animation']
 
-	plugins {
-		disabler {
-			id = 'pl.droidsonroids.animation-disabler'
-			displayName = POM_NAME
-			description = POM_DESCRIPTION
-		}
-	}
+    plugins {
+        disabler {
+            id = 'pl.droidsonroids.animation-disabler'
+            displayName = POM_NAME
+            description = POM_DESCRIPTION
+        }
+    }
 }

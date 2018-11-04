@@ -19,8 +19,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.pluginManager.apply(BasePlugin::class.java)
 
-        val androidPlugins = listOf("com.android.application", "com.android.library", "com.android.test")
-        androidPlugins.forEach {
+        arrayOf("com.android.application", "com.android.library", "com.android.test").forEach {
             project.plugins.withId(it) {
                 project.addAnimationTasksWithDependencies()
             }
@@ -31,42 +30,38 @@ class AnimationDisablerPlugin : Plugin<Project> {
         val disableAnimations = createAnimationScaleTask(false)
         val enableAnimations = createAnimationScaleTask(true)
 
-        tasks.withType(DeviceProviderInstrumentTestTask::class.java).forEach {
-            it.dependsOn(disableAnimations)
-            it.finalizedBy(enableAnimations)
+        tasks.withType(DeviceProviderInstrumentTestTask::class.java).forEach { task ->
+            task.dependsOn(disableAnimations)
+            task.finalizedBy(enableAnimations)
         }
     }
 
-    private fun Project.createAnimationScaleTask(enableAnimations: Boolean): Task =
-        tasks.create("connected${if (enableAnimations) "En" else "Dis"}ableAnimations") {
-            val scale = if (enableAnimations) 1 else 0
+    private fun Project.createAnimationScaleTask(enableAnimations: Boolean): Task {
+        val taskName = "connected${if (enableAnimations) "En" else "Dis"}ableAnimations"
 
+        return tasks.create(taskName) {
+            val scale = if (enableAnimations) 1 else 0
             AndroidDebugBridge.initIfNeeded(false)
             val android = project.extensions.getByType(BaseExtension::class.java)
             val bridge = AndroidDebugBridge.createBridge(android.adbExecutable.path, false)
-            val shellOuptutReceiver = ADBShellOutputReceiver(it.logger)
+            val shellOutputReceiver = ADBShellOutputReceiver(it.logger)
 
             it.group = "verification"
             it.description = "Sets animation scale to $scale on all connected Android devices and AVDs"
             it.doLast {
-                bridge.setAnimationScale(scale, shellOuptutReceiver)
+                bridge.setAnimationScale(scale, shellOutputReceiver)
             }
         }
+    }
 
-    private fun AndroidDebugBridge.setAnimationScale(value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
+    private fun AndroidDebugBridge.setAnimationScale(value: Int, shellOutputReceiver: ADBShellOutputReceiver) {
         val settingsPrefixes = listOf("window_animation", "transition_animation", "animator_duration")
-        var devicesToSet = devices
+        val affectedDevices = devices.filter { androidSerials == null || it.serialNumber in androidSerials }
 
-        if (androidSerials != null) {
-            devicesToSet = devices.filter {
-                it.serialNumber in androidSerials
-            }.toTypedArray()
-        }
-
-        devicesToSet.forEach { device ->
+        affectedDevices.forEach { device ->
             settingsPrefixes.forEach { prefix ->
                 try {
-                    device.setScaleSetting("${prefix}_scale", value, shellOuptutReceiver)
+                    device.setScaleSetting("${prefix}_scale", value, shellOutputReceiver)
                 } catch (e: Exception) {
                     throw IOException("Setting ${prefix}_scale to $value on ${device.serialNumber}", e)
                 }
@@ -74,7 +69,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
         }
     }
 
-    private fun IDevice.setScaleSetting(key: String, value: Int, shellOuptutReceiver: ADBShellOutputReceiver) {
-        executeShellCommand("settings put global $key $value", shellOuptutReceiver, DdmPreferences.getTimeOut().toLong(), TimeUnit.MILLISECONDS)
+    private fun IDevice.setScaleSetting(key: String, value: Int, shellOutputReceiver: ADBShellOutputReceiver) {
+        executeShellCommand("settings put global $key $value", shellOutputReceiver, DdmPreferences.getTimeOut().toLong(), TimeUnit.MILLISECONDS)
     }
 }

@@ -1,1 +1,21 @@
-//Empty top-level build.gradle file to allow opening project in Android Studio
+buildscript {
+    ext {
+        versions = [
+                compileSdk         : 28,
+                targetSdk          : 28,
+                minSdk             : 17,
+                androidXtest       : '1.1.0',
+                androidGradlePlugin: '3.2.1',
+                androidXextJunit   : '1.0.0',
+                kotlin             : '1.3.0'
+        ]
+    }
+}
+
+subprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
+}

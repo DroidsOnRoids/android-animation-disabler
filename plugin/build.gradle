@@ -18,7 +18,7 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        simplePlugin {
+        disabler {
             id = 'pl.droidsonroids.animation-disabler'
             implementationClass = 'pl.droidsonroids.gradle.animation.AnimationDisablerPlugin'
         }
@@ -36,7 +36,6 @@ pluginBundle {
 
     plugins {
         disabler {
-            id = 'pl.droidsonroids.animation-disabler'
             displayName = POM_NAME
             description = POM_DESCRIPTION
         }

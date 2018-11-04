@@ -3,7 +3,7 @@ buildscript {
         versions = [
                 compileSdk         : 28,
                 targetSdk          : 28,
-                minSdk             : 25,
+                minSdk             : 17,
                 androidXtest       : '1.1.0',
                 androidGradlePlugin: '3.2.1',
                 androidXextJunit   : '1.0.0',

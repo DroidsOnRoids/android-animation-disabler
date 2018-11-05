@@ -1,3 +1,7 @@
+### 1.0.6
+ - Dependencies versions updated
+ - Code cleanup and optimization
+ 
 ### 1.0.5
  - Dependencies versions updated
  - Increase errors logging verbosity

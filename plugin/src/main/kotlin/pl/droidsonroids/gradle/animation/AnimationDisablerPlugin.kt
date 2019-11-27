@@ -40,7 +40,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
         val taskName = "connected${if (enableAnimations) "En" else "Dis"}ableAnimations"
 
         return tasks.create(taskName) {
-            val scale = if (enableAnimations) 1 else 0
+            val scale = if (enableAnimations) 1f else 0f
             AndroidDebugBridge.initIfNeeded(false)
             val android = project.extensions.getByType(BaseExtension::class.java)
             val bridge = AndroidDebugBridge.createBridge(android.adbExecutable.path, false)
@@ -54,7 +54,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
         }
     }
 
-    private fun AndroidDebugBridge.setAnimationScale(value: Int, shellOutputReceiver: ADBShellOutputReceiver) {
+    private fun AndroidDebugBridge.setAnimationScale(value: Float, shellOutputReceiver: ADBShellOutputReceiver) {
         val settingsPrefixes = listOf("window_animation", "transition_animation", "animator_duration")
         val affectedDevices = devices.filter { androidSerials == null || it.serialNumber in androidSerials }
 
@@ -69,7 +69,7 @@ class AnimationDisablerPlugin : Plugin<Project> {
         }
     }
 
-    private fun IDevice.setScaleSetting(key: String, value: Int, shellOutputReceiver: ADBShellOutputReceiver) {
+    private fun IDevice.setScaleSetting(key: String, value: Float, shellOutputReceiver: ADBShellOutputReceiver) {
         executeShellCommand("settings put global $key $value", shellOutputReceiver, DdmPreferences.getTimeOut().toLong(), TimeUnit.MILLISECONDS)
     }
 }

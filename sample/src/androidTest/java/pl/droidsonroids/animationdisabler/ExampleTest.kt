@@ -14,8 +14,8 @@ class ExampleTest {
     fun animationScalesSetToZeroDuringTest() {
         val contentResolver = InstrumentationRegistry.getInstrumentation().context.contentResolver
         arrayOf("window_animation", "transition_animation", "animator_duration").forEach {
-            val value = Settings.Global.getInt(contentResolver, it + "_scale")
-            Assert.assertEquals(it, 0, value.toLong())
+            val value = Settings.Global.getFloat(contentResolver, it + "_scale")
+            Assert.assertEquals(it, 0f, value)
         }
     }
 }

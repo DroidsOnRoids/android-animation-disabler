@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id "pl.droidsonroids.animation-disabler" version "1.0.5"
+    id "pl.droidsonroids.animation-disabler" version "1.0.7"
 }
 
 apply plugin: "com.android.library"

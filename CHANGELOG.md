@@ -1,3 +1,7 @@
+### 1.0.7
+ - Dependencies versions updated
+ - Changed settings value type from Int to Float -[#7](https://github.com/koral--/android-animation-disabler/issues/7)
+
 ### 1.0.6
  - Dependencies versions updated
  - Code cleanup and optimization

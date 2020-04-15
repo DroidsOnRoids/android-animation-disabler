@@ -1,3 +1,7 @@
+### 1.0.8
+ - Dependencies versions updated
+ - Use Gradle task configuration avoidance API -[#9](https://github.com/koral--/android-animation-disabler/pull/9)
+
 ### 1.0.7
  - Dependencies versions updated
  - Changed settings value type from Int to Float -[#7](https://github.com/koral--/android-animation-disabler/issues/7)

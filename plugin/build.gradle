@@ -1,15 +1,8 @@
-buildscript {
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-    }
-}
-
 plugins {
     id "com.gradle.plugin-publish" version "0.10.0"
     id "java-gradle-plugin"
+    id "org.jetbrains.kotlin.jvm"
 }
-
-apply plugin: "kotlin"
 
 dependencies {
     implementation "com.android.tools.build:gradle:$versions.androidGradlePlugin"

@@ -9,6 +9,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.plugins.BasePlugin
+import org.gradle.api.tasks.TaskProvider
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -27,19 +28,19 @@ class AnimationDisablerPlugin : Plugin<Project> {
     }
 
     private fun Project.addAnimationTasksWithDependencies() = afterEvaluate {
-        val disableAnimations = createAnimationScaleTask(false)
-        val enableAnimations = createAnimationScaleTask(true)
+        val disableAnimations = registerAnimationScaleTask(false)
+        val enableAnimations = registerAnimationScaleTask(true)
 
-        tasks.withType(DeviceProviderInstrumentTestTask::class.java).forEach { task ->
+        tasks.withType(DeviceProviderInstrumentTestTask::class.java).configureEach { task ->
             task.dependsOn(disableAnimations)
             task.finalizedBy(enableAnimations)
         }
     }
 
-    private fun Project.createAnimationScaleTask(enableAnimations: Boolean): Task {
+    private fun Project.registerAnimationScaleTask(enableAnimations: Boolean): TaskProvider<Task> {
         val taskName = "connected${if (enableAnimations) "En" else "Dis"}ableAnimations"
 
-        return tasks.create(taskName) {
+        return tasks.register(taskName) {
             val scale = if (enableAnimations) 1f else 0f
             AndroidDebugBridge.initIfNeeded(false)
             val android = project.extensions.getByType(BaseExtension::class.java)

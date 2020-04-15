@@ -2,10 +2,6 @@ buildscript {
     repositories {
         google()
     }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-        classpath "com.android.tools.build:gradle:$versions.androidGradlePlugin"
-    }
 }
 
 plugins {
@@ -14,7 +10,6 @@ plugins {
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
-apply plugin: "pl.droidsonroids.animation-disabler"
 
 android {
     compileSdkVersion versions.compileSdk

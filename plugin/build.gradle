@@ -7,6 +7,19 @@ plugins {
 dependencies {
     implementation "com.android.tools.build:gradle:$versions.androidGradlePlugin"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
+    testImplementation gradleTestKit()
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.assertj:assertj-core:3.19.0"
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
+
+tasks.withType(PluginUnderTestMetadata).configureEach {
+    // Plugin doesn't declare any `implementation` dependency. We'll use its compile time dependencies to as a test environment
+    pluginClasspath.from(configurations.compileOnly)
 }
 
 gradlePlugin {

@@ -5,11 +5,10 @@ buildscript {
 }
 
 plugins {
-    id "pl.droidsonroids.animation-disabler" version "1.0.7"
+    id "pl.droidsonroids.animation-disabler" version "1.0.8"
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
 }
-
-apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
 
 android {
     compileSdkVersion versions.compileSdk
@@ -21,9 +20,8 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
     androidTestImplementation "androidx.test:rules:$versions.androidXtest"
     androidTestImplementation "androidx.test:runner:$versions.androidXtest"
     androidTestImplementation "androidx.test.ext:junit:$versions.androidXextJunit"
-    androidTestImplementation "junit:junit:+"
+    androidTestImplementation "junit:junit:$versions.junit"
 }

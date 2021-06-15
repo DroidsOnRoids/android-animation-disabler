@@ -2,11 +2,12 @@ plugins {
     id "com.gradle.plugin-publish" version "0.15.0"
     id "org.jetbrains.kotlin.jvm"
     id "java-gradle-plugin"
+    id "maven-publish"
 }
 
 dependencies {
-    implementation "com.android.tools.build:gradle:$versions.androidGradlePlugin"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
+    compileOnly "com.android.tools.build:gradle:$versions.androidGradlePlugin"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
     testImplementation gradleTestKit()
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
@@ -20,6 +21,21 @@ tasks.withType(Test).configureEach {
 tasks.withType(PluginUnderTestMetadata).configureEach {
     // Plugin doesn't declare any `implementation` dependency. We'll use its compile time dependencies to as a test environment
     pluginClasspath.from(configurations.compileOnly)
+}
+
+def kotlinVersion = plugins.getPlugin("kotlin").kotlinPluginVersion
+configurations.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.group == 'org.jetbrains.kotlin') {
+            useVersion kotlinVersion
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
 }
 
 gradlePlugin {

@@ -1,3 +1,9 @@
+### 1.0.10 - Not released
+ - Dependencies versions updated
+
+### 1.0.9 - 26.06.2023
+ - Update plugin config. Stop requiring specific dependencies version. Ensure Java8 compatibility.
+
 ### 1.0.8
  - Dependencies versions updated
  - Use Gradle task configuration avoidance API -[#9](https://github.com/koral--/android-animation-disabler/pull/9)
@@ -27,4 +33,3 @@
   
 ### 1.0.1
  - Plugin apply order fixed, Animation Disabler can be applied before or after Android Gradle plugin
- 

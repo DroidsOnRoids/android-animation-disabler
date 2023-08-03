@@ -16,12 +16,13 @@ class PluginTest : BaseGradleTest() {
                     id "pl.droidsonroids.animation-disabler"
                 }
                 apply plugin: "com.android.library"
-                
+               
                 android {
-                    compileSdkVersion 30
+                    namespace "pl.droidsonroids.animation-disabler"
+                    compileSdkVersion 33
                     defaultConfig {
                         minSdkVersion 17
-                        targetSdkVersion 30
+                        targetSdkVersion 33
                     }
                 }
             """.trimIndent(),

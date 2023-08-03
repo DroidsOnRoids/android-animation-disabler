@@ -1,65 +1,57 @@
 plugins {
-    id "com.gradle.plugin-publish" version "0.15.0"
+    id "com.gradle.plugin-publish" version "1.2.0"
     id "org.jetbrains.kotlin.jvm"
     id "java-gradle-plugin"
     id "maven-publish"
 }
 
 dependencies {
+    compileOnly "com.google.guava:guava:$versions.guava"
+    compileOnly "com.android.tools.ddms:ddmlib:$versions.ddmLib"
     compileOnly "com.android.tools.build:gradle:$versions.androidGradlePlugin"
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
-    testImplementation gradleTestKit()
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.7.2"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-    testImplementation "org.assertj:assertj-core:3.19.0"
+    testImplementation "org.assertj:assertj-core:$versions.assertJ"
+    testImplementation "org.junit.jupiter:junit-jupiter:$versions.junitJupiter"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
+configurations {
+    pluginTestRuntimeClasspath.extendsFrom compileOnly
+}
+
 tasks.withType(PluginUnderTestMetadata).configureEach {
     // Plugin doesn't declare any `implementation` dependency. We'll use its compile time dependencies to as a test environment
-    pluginClasspath.from(configurations.compileOnly)
+    pluginClasspath.from(configurations.pluginTestRuntimeClasspath)
 }
 
-def kotlinVersion = plugins.getPlugin("kotlin").kotlinPluginVersion
-configurations.configureEach {
-    resolutionStrategy.eachDependency {
-        if (requested.group == 'org.jetbrains.kotlin') {
-            useVersion kotlinVersion
-        }
+tasks.withType(Test).configureEach {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
-    }
+kotlin {
+    jvmToolchain versions.java
 }
 
 gradlePlugin {
+    website = POM_URL
+    vcsUrl = POM_SCM_URL
+
     plugins {
         disabler {
             id = 'pl.droidsonroids.animation-disabler'
             implementationClass = 'pl.droidsonroids.gradle.animation.AnimationDisablerPlugin'
+            displayName = POM_NAME
+            description = POM_DESCRIPTION
+            tags.set(['android', 'ci', 'espresso', 'test', 'UI', 'animation'])
         }
     }
 }
 
 group = GROUP
 version = VERSION_NAME
-
-pluginBundle {
-    website = POM_URL
-    vcsUrl = POM_SCM_URL
-    description = POM_DESCRIPTION
-    tags = ['android', 'ci', 'espresso', 'test', 'UI', 'animation']
-
-    plugins {
-        disabler {
-            displayName = POM_NAME
-            description = POM_DESCRIPTION
-        }
-    }
-}

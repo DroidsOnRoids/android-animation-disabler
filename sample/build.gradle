@@ -1,27 +1,26 @@
-buildscript {
-    repositories {
-        google()
-    }
-}
-
 plugins {
-    id "pl.droidsonroids.animation-disabler" version "1.0.8"
+    id "pl.droidsonroids.animation-disabler" version "1.0.9"
     id "com.android.library"
     id "org.jetbrains.kotlin.android"
 }
 
 android {
+    namespace "pl.droidsonroids.animationdisabler.sample"
     compileSdkVersion versions.compileSdk
     defaultConfig {
         minSdkVersion versions.minSdk
         targetSdkVersion versions.targetSdk
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
+kotlin {
+    jvmToolchain versions.java
+}
+
 dependencies {
-    androidTestImplementation "androidx.test:rules:$versions.androidXtest"
-    androidTestImplementation "androidx.test:runner:$versions.androidXtest"
+    androidTestImplementation "androidx.test:rules:$versions.androidXtestRules"
+    androidTestImplementation "androidx.test:runner:$versions.androidXtestRunner"
     androidTestImplementation "androidx.test.ext:junit:$versions.androidXextJunit"
     androidTestImplementation "junit:junit:$versions.junit"
 }

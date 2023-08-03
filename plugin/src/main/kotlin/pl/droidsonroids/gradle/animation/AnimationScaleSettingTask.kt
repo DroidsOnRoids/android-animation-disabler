@@ -39,6 +39,7 @@ open class AnimationScaleSettingTask @Inject constructor(
 
     @TaskAction
     fun run() {
+        @Suppress("DEPRECATION")
         AndroidDebugBridge.initIfNeeded(false)
         val shellOutputReceiver = ADBShellOutputReceiver(logger)
         val bridge = AndroidDebugBridge.createBridge(

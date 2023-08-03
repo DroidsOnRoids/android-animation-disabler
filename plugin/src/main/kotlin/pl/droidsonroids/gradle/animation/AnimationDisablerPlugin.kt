@@ -10,8 +10,6 @@ import org.gradle.api.tasks.TaskProvider
 
 class AnimationDisablerPlugin : Plugin<Project> {
 
-    private val androidSerials = System.getenv("ANDROID_SERIAL")?.split(',')
-
     override fun apply(project: Project) {
         project.pluginManager.apply(BasePlugin::class.java)
 
